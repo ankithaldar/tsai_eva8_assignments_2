@@ -1,0 +1,9 @@
+matplotlib
+neptune-client
+pytorch-lightning
+PyYAML
+torch
+torchmetrics
+torchsummary
+torchvision
+wandb
