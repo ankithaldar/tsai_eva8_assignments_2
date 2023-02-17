@@ -22,25 +22,47 @@ class BaseEngine(pl.LightningModule):
 
     self.hparams = hparams
 
-    self._init_train_dataloader()
-    self._init_test_dataloader()
-
-    self._init_model()
-    self._init_loss_function()
-    self._init_metrics()
-    self._init_callbacks()
-
     self.setup()
 
-  def _init_train_dataloader(self):
-    self.train_ds = None
+  def setup(self):
+    self._init_optimizer()
 
-  def _init_test_dataloader(self):
-    self.test_ds = None
+  # Lightning module functions
+  def configure_optimizers(self):
+    if self.hparams.lr_scheduler == 'none':
+      return self.optimizer()
+    else:
+      return (
+        {
+          'optimizer': self.optimizer(),
+          'lr_scheduler': self._init_lr_scheduler()
+        }
+      )
 
-  def _init_valid_dataloader(self):
-    self.valid_ds = None
+  def
+  # Lightning module functions
 
+  def _init_optimizer(self):
+    if self.hparams.optimizer == 'SGD':
+      self.optimizer = torch.optim.SGD(
+        self.model.parameters(),
+        lr=self.hparams.learning_rate,
+        momentum=0
+      )
+    elif self.hparams.optimizer == 'Adam':
+      self.optimizer = torch.optim.Adam(
+        self.model.parameters(),
+        lr=self.hparams.learning_rate
+      )
+
+  def _init_lr_scheduler(self):
+    if self.hparams.lr_scheduler == 'StepLR':
+      return {
+        'scheduler': torch.optim.lr_scheduler.StepLR(
+          self.optimizer,
+          **self.hparams.lr_scheduler_args
+        )
+      }
 
 
 # classes
